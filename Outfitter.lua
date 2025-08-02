@@ -811,6 +811,7 @@ function Outfitter_PlayerLeavingWorld()
 end
 
 function Outfitter_PlayerEnteringWorld()
+	Outfitter_UpdateZone();
 	OutfitterItemList_FlushEquippableItems();
 
 	-- Clear BOE cache on login/reload
@@ -4631,7 +4632,13 @@ function Outfitter_InitializeSpecialOccassionOutfits()
 	Outfitter_CreateEmptySpecialOccassionOutfit("City", Outfitter_cCityOutfit);
 
 	-- Create the NonCombat outfit
-	Outfitter_CreateEmptySpecialOccassionOutfit("NonCombat", Outfitter_cNonCombatOutfit);
+	vOutfit = Outfitter_GetSpecialOutfit("NonCombat");
+	if not vOutfit then
+		Outfitter_CreateEmptySpecialOccassionOutfit("NonCombat", Outfitter_cNonCombatOutfit);
+		vOutfit = Outfitter_GetSpecialOutfit("NonCombat");
+		vOutfit.BGDisabled = true;
+		vOutfit.InstDisabled = true;
+	end
 
 	-- Create class-specific outfits
 
