@@ -393,6 +393,7 @@ local Outfitter_cSpecialOutfitDescriptions = {
 	BeastTrash = Outfitter_cBeastTrashOutfitDescription,
 	UndeadTrash = Outfitter_cUndeadTrashOutfitDescription,
 	DemonTrash = Outfitter_cDemonTrashOutfitDescription,
+	NonCombat = Outfitter_cNonCombatOutfitDescription,
 };
 
 -- Note that zone special outfits will be worn in the order
@@ -975,10 +976,20 @@ end
 
 function Outfitter_RegenEnabled(pEvent)
 	gOutfitter_InCombat = false;
+
+	-- Check if any shapeshift outfit is active for any class
+	for _, specialIDInfo in pairs(Outfitter_cShapeshiftSpecialIDs) do
+		if gOutfitter_SpecialState[specialIDInfo.ID] then
+			return; -- A shapeshift form is active, so don't apply the NonCombat outfit
+		end
+	end
+
+	Outfitter_SetSpecialOutfitEnabled("NonCombat", true);
 end
 
 function Outfitter_RegenDisabled(pEvent)
 	gOutfitter_InCombat = true;
+	Outfitter_SetSpecialOutfitEnabled("NonCombat", false);
 end
 
 function Outfitter_PlayerDead(pEvent)
@@ -4108,12 +4119,17 @@ end
 
 function Outfitter_UpdateShapeshiftState()
 	local vNumForms = GetNumShapeshiftForms();
+	local isAnyFormActive = false;
 
 	for vIndex = 1, vNumForms do
 		local vTexture, vName, vIsActive, vIsCastable = GetShapeshiftFormInfo(vIndex);
 		local vSpecialID = Outfitter_cShapeshiftSpecialIDs[vName];
 
 		if vSpecialID then
+			if vIsActive then
+				isAnyFormActive = true;
+			end
+
 			if not vIsActive then
 				vIsActive = false;
 			end
@@ -4127,6 +4143,12 @@ function Outfitter_UpdateShapeshiftState()
 				Outfitter_SetSpecialOutfitEnabled(vSpecialID.ID, vIsActive);
 			end
 		end
+	end
+
+	if not isAnyFormActive and not gOutfitter_InCombat then
+		Outfitter_SetSpecialOutfitEnabled("NonCombat", true);
+	else
+		Outfitter_SetSpecialOutfitEnabled("NonCombat", false);
 	end
 end
 
@@ -4607,6 +4629,9 @@ function Outfitter_InitializeSpecialOccassionOutfits()
 	-- Create the city outfit
 
 	Outfitter_CreateEmptySpecialOccassionOutfit("City", Outfitter_cCityOutfit);
+
+	-- Create the NonCombat outfit
+	Outfitter_CreateEmptySpecialOccassionOutfit("NonCombat", Outfitter_cNonCombatOutfit);
 
 	-- Create class-specific outfits
 
