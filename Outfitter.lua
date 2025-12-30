@@ -842,6 +842,11 @@ end
 function Outfitter_BagUpdate()
 	local vBagIndex = arg1;
 
+	-- debounce the event to avoid doing the same logic many times when swapping sets
+	AceEvent:ScheduleEvent("OutfitterBagUpdate", Outfitter_BagUpdate2, 0.3, vBagIndex)
+end
+
+function Outfitter_BagUpdate2(vBagIndex)
 	OutfitterItemList_FlushBagFromEquippableItems(vBagIndex);
 
 	-- This is a messy hack to ensure the database gets updated properly
@@ -1100,7 +1105,7 @@ function Outfitter_InventoryChanged(pEvent)
 	end
 
 	-- debounce the event to avoid doing the same logic many times when swapping sets
-	AceEvent:ScheduleEvent("OutfitterUnitInventoryChanged", Outfitter_InventoryChanged2, 0.5)
+	AceEvent:ScheduleEvent("OutfitterUnitInventoryChanged", Outfitter_InventoryChanged2, 0.3)
 end
 
 function Outfitter_InventoryChanged2()
