@@ -44,6 +44,36 @@ local Outfitter_cSlotNames = {
 	"Trinket1Slot",
 };
 
+
+local Outfitter_cSlotNames_NoTrinkets = {
+	-- First priority goes to armor
+
+	"HeadSlot",
+	"ShoulderSlot",
+	"ChestSlot",
+	"WristSlot",
+	"HandsSlot",
+	"WaistSlot",
+	"LegsSlot",
+	"FeetSlot",
+
+	-- Second priority goes to weapons
+
+	"MainHandSlot",
+	"SecondaryHandSlot",
+	"RangedSlot",
+	"AmmoSlot",
+
+	-- Last priority goes to items with no durability
+
+	"BackSlot",
+	"NeckSlot",
+	"ShirtSlot",
+	"TabardSlot",
+	"Finger0Slot",
+	"Finger1Slot",
+};
+
 local Outfitter_cSlotDisplayNames = {
 	HeadSlot = HEADSLOT,
 	NeckSlot = NECKSLOT,
@@ -4212,7 +4242,7 @@ function Outfitter_SetAllSlotEnables(pEnable)
 end
 
 function Outfitter_OutfitIsComplete(pOutfit, pIgnoreAmmoSlot)
-	for _, vInventorySlot in Outfitter_cSlotNames do
+	for _, vInventorySlot in Outfitter_cSlotNames_NoTrinkets do
 		if not pOutfit.Items[vInventorySlot]
 				and (not pIgnoreAmmoSlot or vInventorySlot ~= "AmmoSlot") then
 			return false;
