@@ -4166,11 +4166,9 @@ function Outfitter_SetSpecialOutfitEnabled(pSpecialID, pEnable)
 	if pEnable then
 
 		-- Start monitoring health and mana if it's the dining outfit
-		-- If enabling the Dining outfit, disable NonCombat outfit
 		if pSpecialID == "Dining" then
 			Outfitter_ResumeEvent(OutfitterFrame, "UNIT_HEALTH");
 			Outfitter_ResumeEvent(OutfitterFrame, "UNIT_MANA");
-            --Outfitter_SetSpecialOutfitEnabled("NonCombat", false);
 		end
 
 		--
@@ -4185,8 +4183,8 @@ function Outfitter_SetSpecialOutfitEnabled(pSpecialID, pEnable)
 
 		if pSpecialID == "ArgentDawn" then
 			vWearBelowOutfit = Outfitter_GetSpecialOutfit("Riding");
-        elseif pSpecialID == "NonCombat" then
-            vWearBelowOutfit = Outfitter_GetSpecialOutfit("Dining");
+		elseif pSpecialID == "NonCombat" then
+			vWearBelowOutfit = Outfitter_GetSpecialOutfit("Dining");
 		end
 
 		--
