@@ -720,6 +720,7 @@ function Outfitter_OnLoad()
 	-- For monitoring plaguelands and battlegrounds
 
 	Outfitter_RegisterEvent(this, "ZONE_CHANGED_NEW_AREA", Outfitter_UpdateZone);
+	gOutfitter_CurrentZone = GetZoneText();
 
 	-- For monitoring player combat state
 
